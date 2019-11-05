@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -14,6 +16,27 @@ func myHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func formHandler(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var summonerName string
+	err = json.Unmarshal(body, &summonerName)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Println(summonerName)
+
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -21,6 +44,7 @@ func main() {
 	}
 
 	http.HandleFunc("/hello", myHandler)
+	http.HandleFunc("/form", formHandler)
 	http.Handle("/", http.FileServer(http.Dir("public")))
 	http.ListenAndServe(":"+port, nil)
 }
