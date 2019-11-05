@@ -1,4 +1,4 @@
-function submitHandler(event) {
+async function submitHandler(event) {
     event.preventDefault();
     const inputValue = event.target[0].value;
 
@@ -7,7 +7,11 @@ function submitHandler(event) {
             method: 'POST',
             body: JSON.stringify(inputValue),
         };
-        const response = fetch('/form', options);
+        const response = await fetch('/form', options);
+        const responseBody = await response.json();
+
+        const header = document.getElementById('header');
+        header.innerText = responseBody;
     } catch (error) {
         console.error('fetching error');
         console.error(error);

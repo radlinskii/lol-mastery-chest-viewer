@@ -29,12 +29,27 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &summonerName)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	fmt.Println(summonerName)
 
+	output, err := json.Marshal("Hello " + summonerName)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	_, err = w.Write(output)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func main() {
