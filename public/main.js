@@ -8,9 +8,13 @@ async function submitHandler(event) {
             body: JSON.stringify(inputValue),
         };
         const response = await fetch('/form', options);
-        const responseBody = await response.json();
+        if (response.ok) {
+            const responseBody = await response.json();
 
-        console.log(responseBody);
+            console.log(responseBody);
+        } else {
+            console.error(response);
+        }
     } catch (error) {
         console.error('fetching error');
         console.error(error);
