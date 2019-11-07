@@ -1,0 +1,70 @@
+{
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "parserOptions": {
+      "sourceType": "script"
+    },
+    "extends": ["airbnb-base"],
+    "rules": {
+      "global-require": "off",
+      "max-len": [
+        "error",
+        120,
+        {
+          "ignoreComments": true,
+          "ignoreRegExpLiterals": true,
+          "ignoreStrings": true,
+          "ignoreTemplateLiterals": true,
+          "ignoreTrailingComments": true,
+          "ignoreUrls": true,
+          "tabWidth": 4
+        }
+      ],
+      "indent": ["error", 4],
+      "no-irregular-whitespace": [
+        "error",
+        {
+          "skipComments": false,
+          "skipRegExps": false,
+          "skipStrings": false,
+          "skipTemplates": false
+        }
+      ],
+      "no-plusplus": [
+        "error",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
+      "no-use-before-define": [
+        "error",
+        {
+          "classes": true,
+          "functions": false,
+          "variables": true
+        }
+      ],
+      "padding-line-between-statements": [
+        "error",
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "return"
+        },
+        {
+          "blankLine": "always",
+          "prev": "*",
+          "next": "export"
+        },
+        {
+          "blankLine": "any",
+          "prev": "export",
+          "next": "export"
+        }
+      ],
+      "prefer-destructuring": "off",
+      "prefer-promise-reject-errors": "off"
+    }
+  }

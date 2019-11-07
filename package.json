@@ -1,0 +1,25 @@
+{
+  "name": "lol-mastery-chest-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "public/main.js",
+  "scripts": {
+    "lint": "eslint -c ./.eslintrc public/*.js",
+    "test": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radlinskii/lol-mastery-chest-viewer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/radlinskii/lol-mastery-chest-viewer/issues"
+  },
+  "homepage": "https://github.com/radlinskii/lol-mastery-chest-viewer#readme",
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}

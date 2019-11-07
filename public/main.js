@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 async function submitHandler(event) {
     event.preventDefault();
     const inputValue = event.target[0].value;
@@ -21,7 +23,7 @@ async function submitHandler(event) {
     }
 }
 
-window.onload = function() {
+window.onload = function onLoad() {
     const form = document.getElementById('form');
     form.addEventListener('submit', submitHandler);
 };
