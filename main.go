@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -28,6 +29,13 @@ type Champion struct {
 type SummonerWithChampion struct {
 	Summoner
 	Champions []Champion `json:"champions"`
+}
+
+// NotFoundError is used on 404 response from Riot API
+type NotFoundError string
+
+func (NotFoundError) Error() string {
+	return "not found"
 }
 
 func myHandler(w http.ResponseWriter, r *http.Request) {
@@ -58,8 +66,13 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	riotAPISummonerNameURL := "https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + summonerName
 	body, err = fetchRiotAPI(riotAPISummonerNameURL)
 	if err != nil {
+		var e *NotFoundError
+		if errors.As(err, &e) {
+			http.NotFound(w, r)
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 		fmt.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -116,6 +129,10 @@ func fetchRiotAPI(riotAPISummonerNameURL string) ([]byte, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, new(NotFoundError)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
