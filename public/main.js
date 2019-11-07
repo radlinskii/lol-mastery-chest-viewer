@@ -10,8 +10,7 @@ async function submitHandler(event) {
         const response = await fetch('/form', options);
         const responseBody = await response.json();
 
-        const header = document.getElementById('header');
-        header.innerText = responseBody;
+        console.log(responseBody);
     } catch (error) {
         console.error('fetching error');
         console.error(error);
