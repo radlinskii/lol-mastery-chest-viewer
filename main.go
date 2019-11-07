@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -25,17 +24,19 @@ type Champion struct {
 	LastPlayTime int  `json:"lastPlayTime"`
 }
 
-// SummonerWithChampion represents summoner data combined with his champions
-type SummonerWithChampion struct {
+// SummonerWithChampions represents summoner data combined with his champions
+type SummonerWithChampions struct {
 	Summoner
 	Champions []Champion `json:"champions"`
 }
 
 // NotFoundError is used on 404 response from Riot API
-type NotFoundError string
+type NotFoundError struct {
+	URL string
+}
 
-func (NotFoundError) Error() string {
-	return "not found"
+func (e NotFoundError) Error() string {
+	return fmt.Sprintf("request to %q resulted with Not Found response", e.URL)
 }
 
 func myHandler(w http.ResponseWriter, r *http.Request) {
@@ -66,9 +67,8 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	riotAPISummonerNameURL := "https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + summonerName
 	body, err = fetchRiotAPI(riotAPISummonerNameURL)
 	if err != nil {
-		var e *NotFoundError
-		if errors.As(err, &e) {
-			http.NotFound(w, r)
+		if _, ok := err.(NotFoundError); ok {
+			http.Error(w, err.Error(), http.StatusNotFound)
 		} else {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -100,7 +100,7 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := json.Marshal(SummonerWithChampion{summoner, champions})
+	output, err := json.Marshal(SummonerWithChampions{summoner, champions})
 
 	if err != nil {
 		fmt.Println(err)
@@ -118,8 +118,8 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func fetchRiotAPI(riotAPISummonerNameURL string) ([]byte, error) {
-	req, err := http.NewRequest("GET", riotAPISummonerNameURL, nil)
+func fetchRiotAPI(riotAPIURL string) ([]byte, error) {
+	req, err := http.NewRequest("GET", riotAPIURL, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +132,7 @@ func fetchRiotAPI(riotAPISummonerNameURL string) ([]byte, error) {
 	}
 
 	if resp.StatusCode == http.StatusNotFound {
-		return nil, new(NotFoundError)
+		return nil, NotFoundError{riotAPIURL}
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
