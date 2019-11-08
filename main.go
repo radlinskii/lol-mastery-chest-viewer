@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/radlinskii/dotenv"
 )
 
 // Summoner represents summoner data returned from Riot API
@@ -123,7 +125,9 @@ func fetchRiotAPI(riotAPIURL string) ([]byte, error) {
 		return nil, err
 	}
 
-	req.Header.Add("X-Riot-Token", "RGAPI-cf346092-22cd-4ad2-9210-70157271ec76")
+	riotAPIToken := os.Getenv("RIOT_API_TOKEN")
+
+	req.Header.Add("X-Riot-Token", riotAPIToken)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -143,10 +147,14 @@ func fetchRiotAPI(riotAPIURL string) ([]byte, error) {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+	err := dotenv.SetEnv()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
+
+	port := os.Getenv("PORT")
+	fmt.Println("server listening on port:", port)
 
 	http.HandleFunc("/hello", myHandler)
 	http.HandleFunc("/form", formHandler)
