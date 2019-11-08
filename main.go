@@ -80,7 +80,7 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &summoner)
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -101,7 +101,6 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	output, err := json.Marshal(SummonerWithChampions{summoner, champions})
-
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
