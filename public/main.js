@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 async function fetchChampionsJSON() {
-    const response = await fetch('champions.json');
+    const response = await fetch('http://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json');
     const json = await response.json();
 
     return json
@@ -10,6 +10,12 @@ async function fetchChampionsJSON() {
 async function submitHandler(event) {
     event.preventDefault();
     const inputValue = event.target[0].value;
+
+    const container = document.getElementById('container');
+    removeChildren(container);
+    const subheader = document.createElement('h2');
+    subheader.innerText = 'Loading...';
+    container.appendChild(subheader);
 
     try {
         const options = {
@@ -31,6 +37,8 @@ async function submitHandler(event) {
             };
 
             addResults(summonerWithChampions);
+        } else if (response.status === 404) {
+            subheader.innerText = `Summoner with name "${inputValue}" not found :(`;
         } else {
             console.error(response);
         }
@@ -59,8 +67,15 @@ function parseChampionsJSON(championsJSON) {
     return championsByID;
 }
 
+function removeChildren(node) {
+    while(node.firstChild) {
+        node.firstChild.remove();
+    }
+}
+
 function addResults(summoner) {
     const container = document.getElementById('container');
+    removeChildren(container);
 
     const summonerGreeting = document.createElement('h2');
     summonerGreeting.innerText = `Hello ${summoner.name}`;
