@@ -4,7 +4,7 @@ async function fetchChampionsJSON() {
     const response = await fetch('http://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json');
     const json = await response.json();
 
-    return json
+    return json;
 }
 
 async function submitHandler(event) {
@@ -51,7 +51,7 @@ async function submitHandler(event) {
 function mergeChampionsData(championsMap, summoner) {
     const championsData = summoner.champions.map((champ) => ({
         ...champ,
-        ...championsMap[champ.championId]
+        ...championsMap[champ.championId],
     }));
 
     return championsData;
@@ -60,15 +60,15 @@ function mergeChampionsData(championsMap, summoner) {
 function parseChampionsJSON(championsJSON) {
     const champions = Object.values(championsJSON.data);
     const championsByID = champions.reduce((acc, champ) => ({
-            ...acc,
-            [champ.key]: champ,
-        }), {});
+        ...acc,
+        [champ.key]: champ,
+    }), {});
 
     return championsByID;
 }
 
 function removeChildren(node) {
-    while(node.firstChild) {
+    while (node.firstChild) {
         node.firstChild.remove();
     }
 }
@@ -81,7 +81,7 @@ function addResults(summoner) {
     summonerGreeting.innerText = `Hello ${summoner.name}`;
     container.appendChild(summonerGreeting);
 
-    summoner.champions.forEach(champion => {
+    summoner.champions.forEach((champion) => {
         const div = document.createElement('div');
 
         const championName = document.createElement('span');
@@ -89,7 +89,7 @@ function addResults(summoner) {
         div.appendChild(championName);
 
         const championChest = document.createElement('span');
-        championChest.innerText = ` - chest ${champion.chestGranted ?  'already granted' : 'available'}`;
+        championChest.innerText = ` - chest ${champion.chestGranted ? 'already granted' : 'available'}`;
         div.appendChild(championChest);
 
         container.appendChild(div);
