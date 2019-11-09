@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 async function fetchChampionsJSON() {
-    const response = await fetch('http://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json');
+    const response = await fetch('https://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json');
     const json = await response.json();
 
     return json;
