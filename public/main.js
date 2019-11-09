@@ -53,6 +53,8 @@ async function submitHandler(event) {
             throw new Error(msg);
         } else {
             console.error(response);
+
+            throw new Error('Error occured');
         }
     } catch (error) {
         console.error(error);
