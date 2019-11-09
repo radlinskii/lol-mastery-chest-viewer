@@ -1,10 +1,22 @@
 /* eslint-disable no-console */
 
+let championsMapPromise = null;
+
 async function fetchChampionsJSON() {
     const response = await fetch('https://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json');
-    const json = await response.json();
+    if (response.ok) {
+        const json = await response.json();
 
-    return json;
+        return parseChampionsJSON(json);
+    }
+
+    const container = document.getElementById('container');
+    removeChildren(container);
+    const subheader = document.createElement('h2');
+    subheader.innerText = 'Error Occured :(';
+    container.appendChild(subheader);
+
+    throw new Error('error fetching champions.json from Riot API');
 }
 
 async function submitHandler(event) {
@@ -24,10 +36,7 @@ async function submitHandler(event) {
         };
         const response = await fetch('/form', options);
         if (response.ok) {
-            const responseBody = await response.json();
-
-            const championsJSON = await fetchChampionsJSON();
-            const championsMap = parseChampionsJSON(championsJSON);
+            const [responseBody, championsMap] = await Promise.all([response.json(), championsMapPromise]);
             const championsData = mergeChampionsData(championsMap, responseBody);
 
             const summonerWithChampions = {
@@ -38,13 +47,16 @@ async function submitHandler(event) {
 
             addResults(summonerWithChampions);
         } else if (response.status === 404) {
-            subheader.innerText = `Summoner with name "${inputValue}" not found :(`;
+            const msg = `Summoner with name "${inputValue}" not found :(`;
+
+            subheader.innerText = msg;
+            throw new Error(msg);
         } else {
             console.error(response);
         }
     } catch (error) {
-        console.error('fetching error');
         console.error(error);
+        subheader.innerText = 'Error occured';
     }
 }
 
@@ -97,6 +109,12 @@ function addResults(summoner) {
 }
 
 window.onload = function onLoad() {
+    try {
+        championsMapPromise = fetchChampionsJSON();
+    } catch (error) {
+        console.error(error);
+    }
+
     const form = document.getElementById('form');
     form.addEventListener('submit', submitHandler);
 };
