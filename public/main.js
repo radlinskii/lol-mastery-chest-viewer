@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 
-let championsMapPromise = null;
-const SUMMONER_SEARCH_PARAM = 'summonerName';
+const PATCH_VERSION = '10.20.1';
+const D_DRAGON_URL = `https://ddragon.leagueoflegends.com/cdn/${PATCH_VERSION}`;
 
 async function fetchChampionsJSON() {
-    const response = await fetch('https://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json');
+    const response = await fetch(`${D_DRAGON_URL}/data/en_US/champion.json`);
     if (response.ok) {
         const json = await response.json();
 
@@ -34,9 +34,8 @@ async function fetchMasteryChest(value) {
         };
         const response = await fetch('/form', options);
         if (response.ok) {
-            const [responseBody, championsMap] = await Promise.all([response.json(), championsMapPromise]);
+            const [responseBody, championsMap] = await Promise.all([response.json(), fetchChampionsJSON()]);
             const championsData = mergeChampionsData(championsMap, responseBody);
-            console.log(responseBody);
             const summonerWithChampions = {
                 name: responseBody.name,
                 profileIconId: responseBody.profileIconId,
@@ -93,8 +92,16 @@ function addResults(summoner) {
     summonerGreeting.innerText = `Hello ${summoner.name}`;
     container.appendChild(summonerGreeting);
 
+    const summonerAvatar = document.createElement('img');
+    summonerAvatar.src = `${D_DRAGON_URL}/img/profileicon/${summoner.profileIconId}.png`;
+    container.appendChild(summonerAvatar);
+
     summoner.champions.forEach((champion) => {
         const div = document.createElement('div');
+
+        const championAvatar = document.createElement('img');
+        championAvatar.src = `${D_DRAGON_URL}/img/champion/${champion.id}.png`;
+        div.appendChild(championAvatar);
 
         const championName = document.createElement('span');
         championName.innerText = champion.name;
@@ -110,11 +117,7 @@ function addResults(summoner) {
 
 window.onload = function onLoad() {
     let submitted = false;
-    try {
-        championsMapPromise = fetchChampionsJSON();
-    } catch (error) {
-        console.error(error);
-    }
+    const SUMMONER_SEARCH_PARAM = 'summonerName';
 
     const formTag = document.getElementById('form');
     formTag.addEventListener('submit', async (event) => {
