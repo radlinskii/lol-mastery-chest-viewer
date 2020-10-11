@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 let championsMapPromise = null;
+const SUMMONER_SEARCH_PARAM = 'summonerName';
 
 async function fetchChampionsJSON() {
     const response = await fetch('https://ddragon.leagueoflegends.com/cdn/9.22.1/data/en_US/champion.json');
@@ -19,10 +20,7 @@ async function fetchChampionsJSON() {
     throw new Error('error fetching champions.json from Riot API');
 }
 
-async function submitHandler(event) {
-    event.preventDefault();
-    const inputValue = event.target[0].value;
-
+async function fetchMasteryChest(value) {
     const container = document.getElementById('container');
     removeChildren(container);
     const subheader = document.createElement('h2');
@@ -32,13 +30,13 @@ async function submitHandler(event) {
     try {
         const options = {
             method: 'POST',
-            body: JSON.stringify(inputValue),
+            body: JSON.stringify(value),
         };
         const response = await fetch('/form', options);
         if (response.ok) {
             const [responseBody, championsMap] = await Promise.all([response.json(), championsMapPromise]);
             const championsData = mergeChampionsData(championsMap, responseBody);
-
+            console.log(responseBody);
             const summonerWithChampions = {
                 name: responseBody.name,
                 profileIconId: responseBody.profileIconId,
@@ -47,7 +45,7 @@ async function submitHandler(event) {
 
             addResults(summonerWithChampions);
         } else if (response.status === 404) {
-            const msg = `Summoner with name "${inputValue}" not found :(`;
+            const msg = `Summoner with name "${value}" not found :(`;
 
             subheader.innerText = msg;
             throw new Error(msg);
@@ -111,12 +109,35 @@ function addResults(summoner) {
 }
 
 window.onload = function onLoad() {
+    let submitted = false;
     try {
         championsMapPromise = fetchChampionsJSON();
     } catch (error) {
         console.error(error);
     }
 
-    const form = document.getElementById('form');
-    form.addEventListener('submit', submitHandler);
+    const formTag = document.getElementById('form');
+    formTag.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        submitted = true;
+        const inputValue = event.target[0].value;
+
+        const search = new URLSearchParams(window.location.search);
+        search.set(SUMMONER_SEARCH_PARAM, inputValue);
+        window.location.search = search.toString();
+
+        await fetchMasteryChest(inputValue);
+    });
+
+    const currentParams = new URLSearchParams(window.location.search);
+    if (currentParams.has(SUMMONER_SEARCH_PARAM)) {
+        const summonerName = currentParams.get(SUMMONER_SEARCH_PARAM);
+
+        const inputTag = document.getElementById('summonerNameInput');
+        inputTag.value = summonerName;
+
+        if (!submitted) {
+            fetchMasteryChest(summonerName);
+        }
+    }
 };
