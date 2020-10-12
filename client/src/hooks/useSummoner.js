@@ -26,7 +26,7 @@ async function fetchChampionsJSON() {
 }
 
 async function fetchMasteryChest(value) {
-    const response = await fetch('http://localhost:1010/form', {
+    const response = await fetch('/form', {
         method: 'POST',
         body: JSON.stringify(value),
     });
