@@ -158,6 +158,6 @@ func main() {
 
 	http.HandleFunc("/hello", myHandler)
 	http.HandleFunc("/form", formHandler)
-	http.Handle("/", http.FileServer(http.Dir("public")))
+	http.Handle("/", http.FileServer(http.Dir("client/build")))
 	http.ListenAndServe(":"+port, nil)
 }

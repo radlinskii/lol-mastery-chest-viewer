@@ -8,11 +8,11 @@ jobs:
       - "1.13"
       script:
         go test -v ./... -cover
-    - name: Test Node
-      language: node_js
-      node_js:
-      - "10"
-      install:
-      - npm ci
-      script:
-      - npm t
+#    - name: Test Node
+#      language: node_js
+#      node_js:
+#      - "10"
+#      install:
+#      - npm ci
+#      script:
+#      - npm t
