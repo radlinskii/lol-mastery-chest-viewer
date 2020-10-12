@@ -41,15 +41,18 @@ func (e NotFoundError) Error() string {
 	return fmt.Sprintf("request to %q resulted with Not Found response", e.URL)
 }
 
-func myHandler(w http.ResponseWriter, r *http.Request) {
-	_, err := w.Write([]byte("Hello World!"))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+func setupResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+    (*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+    (*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
+    setupResponse(&w, r) // TODO
+	if (*r).Method == "OPTIONS" {
+		return
+	}
+
 	body, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -156,7 +159,6 @@ func main() {
 	port := os.Getenv("PORT")
 	fmt.Println("server listening on port:", port)
 
-	http.HandleFunc("/hello", myHandler)
 	http.HandleFunc("/form", formHandler)
 	http.Handle("/", http.FileServer(http.Dir("client/build")))
 	http.ListenAndServe(":"+port, nil)
