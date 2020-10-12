@@ -37,7 +37,7 @@ function HomePage({ value: initialValue }) {
     const {fetchSummoner, summoner, error, loading} = useSummoner(value);
 
     useEffect(() => {
-    	if (value === initialValue) {
+    	if (!!initialValue && value === initialValue) {
 			fetchSummoner();
 		}
 	}, [value, fetchSummoner, initialValue])
