@@ -26,8 +26,6 @@
   <p align="center">
     App that lets you preview champions' mastery chest availability of any summoner from EUNE region using Riot Games API
     <br />
-    <a href="https://github.com/radlinskii/lol-mastery-chest-viewer"><strong>Explore the docs »</strong></a>
-    <br />
     <br />
     <a href="https://lol-mastery-chest-viewer.herokuapp.com/">View Demo</a>
     ·
@@ -43,6 +41,7 @@
 
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
+  * [Deployed To](#deployed-to)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
@@ -71,7 +70,7 @@ It uses the data directly from official [Riot Games API](https://developer.riotg
 * [React](https://reactjs.org) and [Create React App](https://create-react-app.dev)
 * [Material UI](https://material-ui.com)
 
-### Deployed to
+### Deployed To
 * [Heroku](https://heroku.com) at [lol-mastery-chest-viewer.herokuapp.com](https://lol-mastery-chest-viewer.herokuapp.com)
 
 
@@ -108,7 +107,7 @@ On the web app you can search for data of any summoner from the EUNE servers.
 
 ![screenshot](/docs/screenshot1.png)
 
-But if you are in `Champion Select` menu you probably don't have time for that, so you can simply add a url with your `summoner name` as a search parameter to your browser. When you visit the site the `summonerName` is used preload the content, so there will be no need for additional typing.
+But if you are in *Champion Select* menu you probably don't have time for that, so you can simply add a url with your *summoner* name as a search parameter to your browser. When you visit the site the `summonerName` is used preload the content, so there will be no need for additional typing.
 
 Go and check: https://lol-mastery-chest-viewer.herokuapp.com/?summonerName=Lacertael
 
