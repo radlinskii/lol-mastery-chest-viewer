@@ -75,8 +75,8 @@ To get a local copy up and running follow these simple steps:
 
 ### Prerequisites
 
-1. **Golang**  v1.13+, see [official installation instructions](https://golang.org/doc/install)
-2. **Node** v12+, see [installation guide](https://nodejs.org/en/download)
+1. **Golang**  v1.13+ - see [official installation instructions](https://golang.org/doc/install)
+2. **Node** v12+ - see [installation guide](https://nodejs.org/en/download)
 
 ### Installation
 
