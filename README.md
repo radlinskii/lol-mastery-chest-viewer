@@ -106,7 +106,7 @@ npm run start
 
 On the web app you can search for data of any summoner from the EUNE servers.
 
-![Test Image 3](/docs/screenshot1.png)
+![screenshot](/docs/screenshot1.png)
 
 But if you are in `Champion Select` menu you probably don't have time for that, so you can simply add a url with your `summoner name` as a search parameter to your browser. When you visit the site the `summonerName` is used preload the content, so there will be no need for additional typing.
 
