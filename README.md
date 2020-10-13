@@ -12,13 +12,11 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
   <a href="https://github.com/radlinskii/lol-mastery-chest-viewer">
-    <img src="docs/logo.png" alt="lol mastery chest viewer" width="80" height="80">
+    <img src="docs/images/logo.png" alt="lol mastery chest viewer" width="80" height="80">
   </a>
 
   <h3 align="center">LoL Mastery Chest Viewer</h3>
@@ -34,7 +32,6 @@
     <a href="https://github.com/radlinskii/lol-mastery-chest-viewer/issues">Request Feature</a>
   </p>
 </p>
-
 
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -52,8 +49,6 @@
 * [Contact](#contact)
 * [Acknowledgements](#acknowledgements)
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -63,7 +58,6 @@ It uses the data directly from official [Riot Games API](https://developer.riotg
 
 > Currently, **LoL Mastery Chest Viewer** supports only the *EUNE* servers.
 
-
 ### Built With
 
 * [Go](https://golang.org)
@@ -71,8 +65,8 @@ It uses the data directly from official [Riot Games API](https://developer.riotg
 * [Material UI](https://material-ui.com)
 
 ### Deployed To
-* [Heroku](https://heroku.com) at [lol-mastery-chest-viewer.herokuapp.com](https://lol-mastery-chest-viewer.herokuapp.com)
 
+* [Heroku](https://heroku.com) at [lol-mastery-chest-viewer.herokuapp.com](https://lol-mastery-chest-viewer.herokuapp.com)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -87,14 +81,19 @@ To get a local copy up and running follow these simple steps:
 ### Installation
 
 1. Clone the repo
+
 ```sh
 git clone https://github.com/radlinskii/lol-mastery-chest-viewer.git
 ```
+
 2. Run the server
+
 ```sh
 go run main.go
 ```
+
 3. Run client
+
 ```sh
 cd client
 npm run start
@@ -105,18 +104,16 @@ npm run start
 
 On the web app you can search for data of any summoner from the EUNE servers.
 
-![screenshot](/docs/screenshot1.png)
+![screenshot](docs/images/screenshot1.png)
 
 But if you are in *Champion Select* menu you probably don't have time for that, so you can simply add a url with your *summoner* name as a search parameter to your browser. When you visit the site the `summonerName` is used preload the content, so there will be no need for additional typing.
 
-Go and check: https://lol-mastery-chest-viewer.herokuapp.com/?summonerName=Lacertael
-
+Go and check: <https://lol-mastery-chest-viewer.herokuapp.com/?summonerName=Lacertael>
 
 <!-- ROADMAP -->
 ## Roadmap
 
 See the [open issues](https://github.com/radlinskii/lol-mastery-chest-viewer/issues) for a list of proposed features (and known issues).
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -129,26 +126,21 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See [LICENSE][license-url] for more information.
-
 
 <!-- CONTACT -->
 ## Contact
 
 Ignacy Radliński - [@I9nachi](https://twitter.com/I9nachi)
 
-
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
 * [@miszkur](https://github.com/miszkur)
 * [@benekin](https://github.com/benekin)
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
