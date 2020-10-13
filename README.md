@@ -25,7 +25,7 @@
     App that lets you preview champions' mastery chest availability of any summoner from EUNE region using Riot Games API
     <br />
     <br />
-    <a href="https://lol-mastery-chest-viewer.herokuapp.com/">View Demo</a>
+    <a href="https://lol-mastery-chest-viewer.herokuapp.com/">View Live</a>
     ·
     <a href="https://github.com/radlinskii/lol-mastery-chest-viewer/issues">Report Bug</a>
     ·
