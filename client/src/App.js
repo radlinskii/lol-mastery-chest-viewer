@@ -12,7 +12,7 @@ function App() {
 			<Typography variant="h2" component="h1">
 				LoL Mastery Chest Viewer
 			</Typography>
-			<HomePage value={summonerName}/>
+			<HomePage value={summonerName ?? ''}/>
 		</Container>
 	);
 }

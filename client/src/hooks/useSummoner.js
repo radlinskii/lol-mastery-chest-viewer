@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { D_DRAGON_URL } from '../constants';
+import { D_DRAGON_URL, API_URL } from '../constants';
 
 function mergeChampionsData(championsMap, summoner) {
     return summoner.champions.map((champ) => ({
@@ -26,7 +26,7 @@ async function fetchChampionsJSON() {
 }
 
 async function fetchMasteryChest(value) {
-    const response = await fetch('/form', {
+    const response = await fetch(`${API_URL}/form`, {
         method: 'POST',
         body: JSON.stringify(value),
     });

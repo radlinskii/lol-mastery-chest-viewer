@@ -81,23 +81,32 @@ To get a local copy up and running follow these simple steps:
 ### Installation
 
 1. Clone the repo
+    ```sh
+    git clone https://github.com/radlinskii/lol-mastery-chest-viewer.git
+    ```
 
-```sh
-git clone https://github.com/radlinskii/lol-mastery-chest-viewer.git
-```
+2. Create `.env` file in the repository root folder and specify there following environment variables:
+    ```dotenv
+    RIOT_API_TOKEN=YOUR_RIOT_GAMES_API_TOKEN # get one at https://developer.riotgames.com
+    PORT=1010 # Port for your API server
+    ENV=development # environment, server is configured to accept CORS requests only in "development" environment
+    ```
 
-2. Run the server
+3. Create another `.env` file in the `/client` folder with:
+    ```dotenv
+    REACT_APP_API_URL='http://localhost:1010' # url to local API instance, this is used to benefit from CRA's hot-reload feature
+    ```
 
-```sh
-go run main.go
-```
+4. Run the server
+    ```sh
+    go run main.go
+    ```
 
-3. Run client
-
-```sh
-cd client
-npm run start
-```
+5. Run client
+    ```sh
+    cd client
+    npm run start
+    ```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
