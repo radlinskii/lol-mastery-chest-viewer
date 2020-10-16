@@ -3,55 +3,87 @@ import {
     Paper,
     TableContainer,
     Table,
-    TableHead,
     TableRow,
     TableCell,
     TableBody,
     Avatar,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import EnhancedTableHead from '../EnhancedTableHead'; 
 import { D_DRAGON_URL } from '../../constants';
 
-const useStyles = makeStyles({
-    tableHeadCell: {
-        fontWeight: 900,
-    },
-});
+function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
+    return 0;
+}
 
-function ChampionList({ champions }) {
-    const classes = useStyles();
+function getComparator(order, orderBy) {
+    return order === "desc"
+        ? (a, b) => descendingComparator(a, b, orderBy)
+        : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+        const order = comparator(a[0], b[0]);
+        if (order !== 0) return order;
+        return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+}
+
+const headCells = [
+    { id: "avatar", align: "left", label: "", noSort:true },
+    { id: "name", align: "left", label: "Champion" },
+    { id: "chestGranted", align: "center", label: "Mastery Chest Available" },
+    { id: "championLevel", align: "center", label: "Mastery Level" },
+    { id: "championPoints", align: "center", label: "Champion Points" }
+];
+
+export default function ChampionList({ champions }) {
+    const [order, setOrder] = React.useState("desc");
+    const [orderBy, setOrderBy] = React.useState("championPoints");
+
+    const handleRequestSort = (event, property) => {
+        const isAsc = orderBy === property && order === "asc";
+        setOrder(isAsc ? "desc" : "asc");
+        setOrderBy(property);
+    };
 
     return (
         <TableContainer component={Paper} elevation={0}>
             <Table aria-label="customized table">
-                <TableHead className={classes.tableHeadCell}>
-                    <TableRow>
-                        <TableCell className={classes.tableHeadCell} align="left" />
-                        <TableCell className={classes.tableHeadCell} align="left">Champion</TableCell>
-                        <TableCell className={classes.tableHeadCell} align="center">Mastery Chest Available</TableCell>
-                        <TableCell className={classes.tableHeadCell} align="center">Mastery Level</TableCell>
-                        <TableCell className={classes.tableHeadCell} align="center">Champion Points</TableCell>
-                    </TableRow>
-                </TableHead>
+                <EnhancedTableHead
+                        headers={headCells}
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                />
                 <TableBody>
-                    {champions.map((champion) => (
-                        <TableRow key={champion.id}>
-                            <TableCell align="left">
-                                <Avatar
-                                    alt={`${champion.id} avatar`}
-                                    src={`${D_DRAGON_URL}/img/champion/${champion.id}.png`}
-                                />
-                            </TableCell>
-                            <TableCell align="left">{champion.id}</TableCell>
-                            <TableCell align="center">{champion.chestGranted ? "false" : "true"}</TableCell>
-                            <TableCell align="center">{champion.championLevel}</TableCell>
-                            <TableCell align="center">{champion.championPoints}</TableCell>
-                        </TableRow>
-                    ))}
+                    {stableSort(champions, getComparator(order, orderBy))
+                        .map((champion, index) => {
+                            return (
+                                <TableRow key={champion.id}>
+                                    <TableCell align="left">
+                                        <Avatar
+                                            alt={`${champion.id} avatar`}
+                                            src={`${D_DRAGON_URL}/img/champion/${champion.id}.png`}
+                                        />
+                                    </TableCell>
+                                    <TableCell align="left">{champion.id}</TableCell>
+                                    <TableCell align="center">{champion.chestGranted ? "false" : "true"}</TableCell>
+                                    <TableCell align="center">{champion.championLevel}</TableCell>
+                                    <TableCell align="center">{champion.championPoints}</TableCell>
+                                </TableRow>
+                            );
+                        })}
                 </TableBody>
             </Table>
         </TableContainer>
     );
 }
-
-export default React.memo(ChampionList);
