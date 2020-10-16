@@ -45,8 +45,12 @@ function HomePage({ value: initialValue }) {
     const handleInputChange = (event) => {
         setValue(event.target.value);
     };
+	
+	const summonerNameEntered = value.trim() !== initialValue && value.trim().length > 0;
 
     const handleClick = () => {
+		if (!summonerNameEntered) return;
+
 		fetchSummoner();
 
 		const search = new URLSearchParams(window.location.search);
@@ -67,6 +71,7 @@ function HomePage({ value: initialValue }) {
 					type="text"
 					onChange={handleInputChange}
 					placeholder="Summoner's name"
+					required
 					value={value}
 					disabled={loading}
 					onKeyDown={handleEnterPress}
@@ -76,7 +81,7 @@ function HomePage({ value: initialValue }) {
 					variant="contained"
 					color="primary"
 					onClick={handleClick}
-					disabled={loading}>
+					disabled={loading || !summonerNameEntered}>
 					Submit
 				</Button>
 			</Box>
