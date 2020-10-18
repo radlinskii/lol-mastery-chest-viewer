@@ -105,6 +105,7 @@ To get a local copy up and running follow these simple steps:
 5. Run client
     ```sh
     cd client
+    npm install
     npm run start
     ```
 
