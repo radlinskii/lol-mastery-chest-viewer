@@ -52,7 +52,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-**LoL Mastery Chest Viewer** helps you quickly check which of your champions still have *Mastery Chests* available in this season of *Legue of Legends*.
+**LoL Mastery Chest Viewer** helps you quickly check which of your champions still have *Mastery Chests* available in this season of *League of Legends*.
 It can become handy if you are already in the *Champion Select* menu and you are not sure on which champions you have already been granted the *Mastery Chest*.
 It uses the data directly from official [Riot Games API](https://developer.riotgames.com).
 
