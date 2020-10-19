@@ -17,6 +17,11 @@ const useStyles = makeStyles({
 	button: {
 		marginLeft: '20px',
 	},
+	headerWrap: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
 	header: {
 		display: 'flex',
 		alignItems: 'center',
@@ -115,7 +120,7 @@ function HomePage({ value: initialValue }) {
 			{summoner !== undefined && !loading && error?.message === undefined && (
 				<>
 					<Divider />
-					<Box display="flex" justifyContent="space-between" alignItems="center">
+					<Box className={classes.headerWrap}>
 						<Box className={classes.header}>
 							<Typography variant="h3" component="h2">
 								Hi {summoner.name}!
