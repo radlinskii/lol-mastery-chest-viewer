@@ -17,6 +17,11 @@ const useStyles = makeStyles({
 	button: {
 		marginLeft: '20px',
 	},
+	headerWrap: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
 	header: {
 		display: 'flex',
 		alignItems: 'center',
@@ -33,7 +38,8 @@ const useStyles = makeStyles({
 
 function HomePage({ value: initialValue }) {
 	const classes = useStyles();
-    const [value, setValue] = useState(initialValue);
+	const [value, setValue] = useState(initialValue);
+	const [championQuery, setChampionQuery] = useState('');
     const {fetchSummoner, summoner, error, loading} = useSummoner(value);
 
     useEffect(() => {
@@ -63,6 +69,10 @@ function HomePage({ value: initialValue }) {
 			handleClick();
 		}
 	}
+
+	const filterChampions = (list) => championQuery 
+		? list.filter(({name}) => name.toLowerCase().indexOf(championQuery.toLowerCase()) > -1) 
+		: list
 
     return (
 		<Card className={classes.container} raised >
@@ -110,17 +120,23 @@ function HomePage({ value: initialValue }) {
 			{summoner !== undefined && !loading && error?.message === undefined && (
 				<>
 					<Divider />
-					<Box className={classes.header}>
-						<Typography variant="h3" component="h2">
-							Hi {summoner.name}!
-						</Typography>
-						<Avatar
-							className={classes.avatar}
-							alt={`${summoner.name} avatar`}
-							src={`${D_DRAGON_URL}/img/profileicon/${summoner.profileIconId}.png`}
-						/>
+					<Box className={classes.headerWrap}>
+						<Box className={classes.header}>
+							<Typography variant="h3" component="h2">
+								Hi {summoner.name}!
+							</Typography>
+							<Avatar
+								className={classes.avatar}
+								alt={`${summoner.name} avatar`}
+								src={`${D_DRAGON_URL}/img/profileicon/${summoner.profileIconId}.png`}
+							/>
+						</Box>
+						<TextField 
+								type="text"
+								onChange={e => setChampionQuery(e.target.value)}
+								placeholder="Find champion"/>
 					</Box>
-					<ChampionList champions={summoner.champions} />
+					<ChampionList champions={filterChampions(summoner.champions)} />
 				</>
 			)}
 		</Card>
