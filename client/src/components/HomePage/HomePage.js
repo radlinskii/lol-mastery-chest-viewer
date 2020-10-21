@@ -10,6 +10,8 @@ import {
 	Card,
 	Divider,
 	Typography,
+	FormControlLabel,
+	Switch,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -40,6 +42,7 @@ function HomePage({ value: initialValue }) {
 	const classes = useStyles();
 	const [value, setValue] = useState(initialValue);
 	const [championQuery, setChampionQuery] = useState('');
+	const [availableChests, setAvailableChests] = useState(false);
     const {fetchSummoner, summoner, error, loading} = useSummoner(value);
 
     useEffect(() => {
@@ -70,9 +73,15 @@ function HomePage({ value: initialValue }) {
 		}
 	}
 
-	const filterChampions = (list) => championQuery 
-		? list.filter(({name}) => name.toLowerCase().indexOf(championQuery.toLowerCase()) > -1) 
-		: list
+	const filterChampions = (list) => {
+		let summonerChampions = list;
+		if (availableChests) {
+			summonerChampions = summoner.champions.filter(({chestGranted}) => !chestGranted) 
+		} 
+		return championQuery 
+		? summonerChampions.filter(({name}) => name.toLowerCase().indexOf(championQuery.toLowerCase()) > -1) 
+		: summonerChampions
+	}
 
     return (
 		<Card className={classes.container} raised >
@@ -131,10 +140,23 @@ function HomePage({ value: initialValue }) {
 								src={`${D_DRAGON_URL}/img/profileicon/${summoner.profileIconId}.png`}
 							/>
 						</Box>
-						<TextField 
+						<Box>
+							<FormControlLabel
+								control={
+									<Switch
+										checked={availableChests}
+										onChange={e => setAvailableChests(e.target.checked)}
+										name="availableChests"
+										color="primary"
+									/>
+								}
+								label="Available chests"
+							/>
+							<TextField 
 								type="text"
 								onChange={e => setChampionQuery(e.target.value)}
 								placeholder="Find champion"/>
+						</Box>
 					</Box>
 					<ChampionList champions={filterChampions(summoner.champions)} />
 				</>
