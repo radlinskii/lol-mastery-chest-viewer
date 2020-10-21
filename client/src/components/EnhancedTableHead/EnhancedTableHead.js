@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import {
     TableHead,
     TableRow,
@@ -14,12 +14,12 @@ const useStyles = makeStyles({
     },
     visuallyHidden: {
         border: 0,
-        clip: "rect(0 0 0 0)",
+        clip: 'rect(0 0 0 0)',
         height: 1,
         margin: -1,
-        overflow: "hidden",
+        overflow: 'hidden',
         padding: 0,
-        position: "absolute",
+        position: 'absolute',
         top: 20,
         width: 1
     }
@@ -44,9 +44,9 @@ export default function EnhancedTableHead(props) {
             <TableRow>
                 {headers.map((headCell) => {
                     if (headCell.hasOwnProperty('noSort')) {
-                        return <TableCell key={headCell.id} className={classes.tableHeadCell} align={headCell.align}>{headCell.label}</TableCell>
-                    }
-                    else {
+                        return <TableCell key={headCell.id} className={classes.tableHeadCell}
+                                          align={headCell.align}>{headCell.label}</TableCell>;
+                    } else {
                         return <TableCell
                             key={headCell.id}
                             className={classes.tableHeadCell}
@@ -55,17 +55,17 @@ export default function EnhancedTableHead(props) {
                         >
                             <TableSortLabel
                                 active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : "asc"}
+                                direction={orderBy === headCell.id ? order : 'asc'}
                                 onClick={createSortHandler(headCell.id)}
                             >
                                 {headCell.label}
                                 {orderBy === headCell.id ? (
                                     <span className={classes.visuallyHidden}>
-                                        {order === "desc" ? "sorted descending" : "sorted ascending"}
+                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                     </span>
                                 ) : null}
                             </TableSortLabel>
-                        </TableCell>
+                        </TableCell>;
                     }
                 })}
             </TableRow>
@@ -76,7 +76,7 @@ export default function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
     headers: PropTypes.arrayOf(PropTypes.object).isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired
 };
 
