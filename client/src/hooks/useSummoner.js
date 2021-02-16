@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { D_DRAGON_URL, API_URL } from '../constants';
+import { D_DRAGON_CDN_URL, D_DRAGON_VERSIONS_URL, API_URL } from '../constants';
 
 function mergeChampionsData(championsMap, summonerChampions) {
     return summonerChampions.map((champ) => ({
@@ -8,8 +8,20 @@ function mergeChampionsData(championsMap, summonerChampions) {
     }));
 }
 
-async function fetchChampionsJSON() {
-    const url = `${D_DRAGON_URL}/data/en_US/champion.json`;
+async function fetchPatchVersion() {
+    const response = await fetch(D_DRAGON_VERSIONS_URL);
+
+    if (response.ok) {
+        const json = await response.json();
+
+        return json.shift()
+    } else {
+        throw new Error(`Error fetching champions.json from Riot API, url: ${D_DRAGON_VERSIONS_URL}`);
+    }
+}
+
+async function fetchChampionsJSON(patchVersion) {
+    const url = `${D_DRAGON_CDN_URL}/${patchVersion}/data/en_US/champion.json`;
     const response = await fetch(url);
 
     if (response.ok) {
@@ -32,12 +44,14 @@ async function fetchMasteryChest(value) {
     });
 
     if (response.ok) {
-        const [summonerData, championsMap] = await Promise.all([response.json(), fetchChampionsJSON()]);
+        const patchVersion = await fetchPatchVersion();
+        const [summonerData, championsMap] = await Promise.all([response.json(), fetchChampionsJSON(patchVersion)]);
         return {
             name: summonerData.name,
             profileIconId: summonerData.profileIconId,
             champions: mergeChampionsData(championsMap, summonerData.champions),
-            freeChampionIds: summonerData.freeChampionIds
+            freeChampionIds: summonerData.freeChampionIds,
+            patchVersion
         };
     } else if (response.status === 404) {
         throw new Error(`Summoner with name "${value}" not found :(`);

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import useSummoner from '../../hooks/useSummoner';
-import { D_DRAGON_URL, SUMMONER_SEARCH_PARAM } from '../../constants';
+import { D_DRAGON_CDN_URL, SUMMONER_SEARCH_PARAM } from '../../constants';
 import ChampionList from '../ChampionList';
 import {
     TextField,
@@ -142,7 +142,7 @@ function HomePage({ value: initialValue, shouldHideRotation }) {
                         <Avatar
                             className={classes.avatar}
                             alt={`${summoner.name} avatar`}
-                            src={`${D_DRAGON_URL}/img/profileicon/${summoner.profileIconId}.png`}
+                            src={`${D_DRAGON_CDN_URL}/${summoner.patchVersion}/img/profileicon/${summoner.profileIconId}.png`}
                         />
                     </Box>
                     <Box className={classes.toolbar}>
@@ -157,7 +157,7 @@ function HomePage({ value: initialValue, shouldHideRotation }) {
                             label="Hide champions from current free rotation"
                         />
                     </Box>
-                    <ChampionList champions={filterInChampionNameQuery(filterOutChampionsFromFreeRotation(summoner.champions))} />
+                    <ChampionList champions={filterInChampionNameQuery(filterOutChampionsFromFreeRotation(summoner.champions))} patchVersion={summoner.patchVersion} />
                 </>
             )}
         </Card>

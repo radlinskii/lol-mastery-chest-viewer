@@ -9,7 +9,7 @@ import {
     Avatar,
 } from '@material-ui/core';
 import EnhancedTableHead from '../EnhancedTableHead';
-import { D_DRAGON_URL } from '../../constants';
+import { D_DRAGON_CDN_URL } from '../../constants';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -66,7 +66,7 @@ const headCells = [
     }
 ];
 
-export default function ChampionList({ champions }) {
+export default function ChampionList({ champions, patchVersion }) {
     const [order, setOrder] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('championPoints');
 
@@ -93,7 +93,7 @@ export default function ChampionList({ champions }) {
                                     <TableCell align="left">
                                         <Avatar
                                             alt={`${champion.id} avatar`}
-                                            src={`${D_DRAGON_URL}/img/champion/${champion.id}.png`}
+                                            src={`${D_DRAGON_CDN_URL}/${patchVersion}/img/champion/${champion.id}.png`}
                                         />
                                     </TableCell>
                                     <TableCell align="left">{champion.id}</TableCell>
