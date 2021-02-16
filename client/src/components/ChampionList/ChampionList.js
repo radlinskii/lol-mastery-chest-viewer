@@ -12,10 +12,10 @@ import EnhancedTableHead from '../EnhancedTableHead';
 import { D_DRAGON_URL } from '../../constants';
 
 function descendingComparator(a, b, orderBy) {
-    if (b[ orderBy ] < a[ orderBy ]) {
+    if (b[orderBy] < a[orderBy]) {
         return -1;
     }
-    if (b[ orderBy ] > a[ orderBy ]) {
+    if (b[orderBy] > a[orderBy]) {
         return 1;
     }
     return 0;
@@ -30,11 +30,11 @@ function getComparator(order, orderBy) {
 function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
-        const order = comparator(a[ 0 ], b[ 0 ]);
+        const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
-        return a[ 1 ] - b[ 1 ];
+        return a[1] - b[1];
     });
-    return stabilizedThis.map((el) => el[ 0 ]);
+    return stabilizedThis.map((el) => el[0]);
 }
 
 const headCells = [
@@ -87,7 +87,7 @@ export default function ChampionList({ champions }) {
                 />
                 <TableBody>
                     {stableSort(champions, getComparator(order, orderBy))
-                        .map((champion, index) => {
+                        .map((champion) => {
                             return (
                                 <TableRow key={champion.id}>
                                     <TableCell align="left">

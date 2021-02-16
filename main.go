@@ -26,10 +26,16 @@ type Champion struct {
 	LastPlayTime int  `json:"lastPlayTime"`
 }
 
+// ChampionRotation represents list of champions ids that are in free champion rotation this week returned from Riot API
+type ChampionRotation struct {
+	FreeChampionIds []int `json:"freeChampionIds"`
+}
+
 // SummonerWithChampions represents summoner data combined with his champions
 type SummonerWithChampions struct {
 	Summoner
 	Champions []Champion `json:"champions"`
+	ChampionRotation
 }
 
 // NotFoundError is used on 404 response from Riot API
@@ -51,18 +57,18 @@ func myHandler(w http.ResponseWriter, r *http.Request) {
 
 func setupResponse(w *http.ResponseWriter, req *http.Request) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-    (*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-    (*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
 	env := os.Getenv("ENV")
-	if (env == "development") {
-        setupResponse(&w, r)
+	if env == "development" {
+		setupResponse(&w, r)
 
-        if (*r).Method == "OPTIONS" {
-            return
-        }
+		if (*r).Method == "OPTIONS" {
+			return
+		}
 	}
 
 	body, err := ioutil.ReadAll(r.Body)
@@ -117,7 +123,27 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	output, err := json.Marshal(SummonerWithChampions{summoner, champions})
+	riotAPIChampionRotationURL := "https://eun1.api.riotgames.com/lol/platform/v3/champion-rotations"
+	body, err = fetchRiotAPI(riotAPIChampionRotationURL)
+	if err != nil {
+		if _, ok := err.(NotFoundError); ok {
+			http.Error(w, err.Error(), http.StatusNotFound)
+		} else {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		fmt.Println(err)
+		return
+	}
+
+	var championRotation ChampionRotation
+	err = json.Unmarshal(body, &championRotation)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	output, err := json.Marshal(SummonerWithChampions{summoner, champions, championRotation})
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -170,7 +196,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-	    port = "1010"
+		port = "1010"
 	}
 
 	env := os.Getenv("ENV")

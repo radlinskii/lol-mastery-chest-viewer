@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { D_DRAGON_URL, API_URL } from '../constants';
 
-function mergeChampionsData(championsMap, summoner) {
-    return summoner.champions.map((champ) => ({
+function mergeChampionsData(championsMap, summonerChampions) {
+    return summonerChampions.map((champ) => ({
         ...champ,
         ...championsMap[champ.championId],
     }));
@@ -18,7 +18,7 @@ async function fetchChampionsJSON() {
         const champions = Object.values(json.data);
         return champions.reduce((acc, champ) => ({
             ...acc,
-            [ champ.key ]: champ,
+            [champ.key]: champ,
         }), {});
     }
 
@@ -33,11 +33,11 @@ async function fetchMasteryChest(value) {
 
     if (response.ok) {
         const [summonerData, championsMap] = await Promise.all([response.json(), fetchChampionsJSON()]);
-
         return {
             name: summonerData.name,
             profileIconId: summonerData.profileIconId,
-            champions: mergeChampionsData(championsMap, summonerData),
+            champions: mergeChampionsData(championsMap, summonerData.champions),
+            freeChampionIds: summonerData.freeChampionIds
         };
     } else if (response.status === 404) {
         throw new Error(`Summoner with name "${value}" not found :(`);
@@ -56,7 +56,7 @@ const useSummoner = (value) => {
         setError(undefined);
     }, [summoner])
 
-    const fetchSummoner = useCallback(  async () => {
+    const fetchSummoner = useCallback(async () => {
         try {
             setSummoner(undefined);
             setLoading(true);
