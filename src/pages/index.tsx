@@ -4,8 +4,15 @@ import { Container, Typography, Box } from '@mui/material'
 import Image from 'next/image'
 import logo from '../../public/logo.png'
 import HomePage from '../../src/components/HomePage'
+import { useRouter } from 'next/router'
+import { getSingleQueryParam } from '../utils'
+import { HIDE_ROTATION_PARAM, SUMMONER_SEARCH_PARAM } from '../constants'
 
 const Home: NextPage = () => {
+    const router = useRouter()
+    const initialSummonerName = getSingleQueryParam(router.query[SUMMONER_SEARCH_PARAM]) ?? ''
+    const initialShouldHideRotation = getSingleQueryParam(router.query[HIDE_ROTATION_PARAM])
+
     return (
         <main>
             <Container>
@@ -40,7 +47,10 @@ const Home: NextPage = () => {
                         </Link>
                     </Box>
                 </Box>
-                <HomePage />
+                <HomePage
+                    shouldHideRotation={initialShouldHideRotation === 'true'}
+                    summonerName={initialSummonerName}
+                />
             </Container>
         </main>
     )

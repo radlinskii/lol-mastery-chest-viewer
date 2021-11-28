@@ -5,35 +5,36 @@ import useSummoner from '../../hooks/useSummoner'
 import { D_DRAGON_CDN_URL, HIDE_ROTATION_PARAM, SUMMONER_SEARCH_PARAM } from '../../constants'
 import ChampionList from '../ChampionList'
 import { Champion } from '../../types'
+import { getSingleQueryParam } from '../../utils'
 
-function getSingleQueryParam(value: string | string[] | undefined) {
-    const valueStr = Array.isArray(value) ? value[0] : value
-
-    return valueStr
+type HomePageProps = {
+    summonerName: string
+    shouldHideRotation: boolean
 }
 
-function HomePage() {
+function HomePage({ summonerName: initialSummonerName, shouldHideRotation: initialShouldHideRotation }: HomePageProps) {
     const router = useRouter()
-    const initialSummonerName = getSingleQueryParam(router.query[SUMMONER_SEARCH_PARAM]) ?? ''
-    const initialShouldHideRotation = getSingleQueryParam(router.query[HIDE_ROTATION_PARAM])
-
     const [value, setValue] = useState<string>(initialSummonerName)
     const [championQuery, setChampionQuery] = useState<string>('')
     const [wasInitialFetchCalled, setInitialFetchCalled] = useState<boolean>(false)
-    const [shouldHideChampionsFromRotation, setShouldHideChampionsFromRotation] = useState<boolean>(
-        initialShouldHideRotation === 'true'
-    )
+    const [shouldHideChampionsFromRotation, setShouldHideChampionsFromRotation] =
+        useState<boolean>(initialShouldHideRotation)
     const { fetchSummoner, summoner, error, loading } = useSummoner(value)
 
-    useEffect(
-        function initialFetchEffect() {
-            if (!wasInitialFetchCalled && !!initialSummonerName && value === initialSummonerName) {
-                fetchSummoner()
-                setInitialFetchCalled(true)
-            }
-        },
-        [wasInitialFetchCalled, value, fetchSummoner, initialSummonerName]
-    )
+    useEffect(() => {
+        setValue(initialSummonerName)
+    }, [initialSummonerName])
+
+    useEffect(() => {
+        setShouldHideChampionsFromRotation(initialShouldHideRotation)
+    }, [initialShouldHideRotation])
+
+    useEffect(() => {
+        if (!wasInitialFetchCalled && !!initialSummonerName && value === initialSummonerName) {
+            fetchSummoner()
+            setInitialFetchCalled(true)
+        }
+    }, [wasInitialFetchCalled, value, fetchSummoner, initialSummonerName])
 
     const isSummonerNameEmpty = useMemo(() => value.trim().length === 0, [value])
 
@@ -44,13 +45,15 @@ function HomePage() {
 
         fetchSummoner()
 
-        const searchParams = new URLSearchParams({
-            [SUMMONER_SEARCH_PARAM]: getSingleQueryParam(router.query[SUMMONER_SEARCH_PARAM]) ?? '', // TODO: test replacing it with initial values
-            [HIDE_ROTATION_PARAM]: getSingleQueryParam(router.query[HIDE_ROTATION_PARAM]) ?? '',
-        })
-        searchParams.set(SUMMONER_SEARCH_PARAM, value)
+        const searchParams = new URLSearchParams()
+        if (value) {
+            searchParams.set(SUMMONER_SEARCH_PARAM, value)
+        }
+        if (shouldHideChampionsFromRotation) {
+            searchParams.set(HIDE_ROTATION_PARAM, shouldHideChampionsFromRotation.toString())
+        }
         router.push(router.pathname + '?' + searchParams.toString())
-    }, [fetchSummoner, value, isSummonerNameEmpty, router])
+    }, [fetchSummoner, value, isSummonerNameEmpty, router, shouldHideChampionsFromRotation])
 
     const handleEnterPress = (event: KeyboardEvent) => {
         if (event.key === 'Enter') {
@@ -60,6 +63,15 @@ function HomePage() {
 
     const handleChampionRotationCheckboxChange = (_: unknown, checked: boolean) => {
         setShouldHideChampionsFromRotation(checked)
+
+        const searchParams = new URLSearchParams()
+        if (initialSummonerName) {
+            searchParams.set(SUMMONER_SEARCH_PARAM, initialSummonerName)
+        }
+        if (checked) {
+            searchParams.set(HIDE_ROTATION_PARAM, checked.toString())
+        }
+        router.push(router.pathname + '?' + searchParams.toString())
     }
 
     const handleSummonerNameInputChange = (event: ChangeEvent<HTMLInputElement>) => {
