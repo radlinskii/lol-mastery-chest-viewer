@@ -24,7 +24,7 @@
     App that lets you preview champions' mastery chest availability of any summoner from EUNE region using Riot Games API
     <br />
     <br />
-    <a href="https://lol-mastery-chest-viewer.herokuapp.com/">View Live</a>
+    <a href="https://lol-mastery-chest-viewer.vercel.app/">View Live</a>
     ·
     <a href="https://github.com/radlinskii/lol-mastery-chest-viewer/issues">Report Bug</a>
     ·
@@ -61,13 +61,13 @@ It uses the data directly from official [Riot Games API](https://developer.riotg
 
 ### Built With
 
--   [Go](https://golang.org)
--   [React](https://reactjs.org) and [Create React App](https://create-react-app.dev)
--   [Material UI](https://material-ui.com)
+-   [Next.js](https://nextjs.org/) and [Create Next App](https://nextjs.org/docs/api-reference/create-next-app)
+-   [Typescript](https://www.typescriptlang.org/)
+-   [Material UI](https://mui.com)
 
 ### Deployed To
 
--   [Heroku](https://heroku.com) at [lol-mastery-chest-viewer.herokuapp.com](https://lol-mastery-chest-viewer.herokuapp.com)
+-   [Vercel](https://vercel.com) at [lol-mastery-chest-viewer.vercel.app](https://lol-mastery-chest-viewer.vercel.app/)
 
 <!-- GETTING STARTED -->
 
@@ -77,8 +77,7 @@ To get a local copy up and running follow these simple steps:
 
 ### Prerequisites
 
-1. **Golang** v1.13+ - see [official installation instructions](https://golang.org/doc/install)
-2. **Node** v12+ - see [installation guide](https://nodejs.org/en/download)
+1. **Node.js** - see [installation guide](https://nodejs.org/en/download)
 
 ### Installation
 
@@ -92,27 +91,12 @@ To get a local copy up and running follow these simple steps:
 
     ```dotenv
     RIOT_API_TOKEN=YOUR_RIOT_GAMES_API_TOKEN # get one at https://developer.riotgames.com
-    PORT=1010 # Port for your API server
-    ENV=development # environment, server is configured to accept CORS requests only in "development" environment
     ```
 
-3. Create another `.env` file in the `/client` folder with:
-
-    ```dotenv
-    REACT_APP_API_URL='http://localhost:1010' # url to local API instance, this is used to benefit from CRA's hot-reload feature
-    ```
-
-4. Run the server
+3. Run the development server
 
     ```sh
-    go run main.go
-    ```
-
-5. Run client
-    ```sh
-    cd client
-    npm install
-    npm run start
+    npm run dev
     ```
 
 <!-- USAGE EXAMPLES -->
@@ -125,7 +109,7 @@ On the web app you can search for data of any summoner from the EUNE servers.
 
 But if you are in _Champion Select_ menu you probably don't have time for that, so you can simply add a url with your _summoner_ name as a search parameter to your browser. When you visit the site the `summonerName` is used preload the content, so there will be no need for additional typing.
 
-Go and check: <https://lol-mastery-chest-viewer.herokuapp.com/?summonerName=Lacertael>
+Go and check: <https://lol-mastery-chest-viewer.vercel.app/?summonerName=Lacertael>
 
 <!-- ROADMAP -->
 
