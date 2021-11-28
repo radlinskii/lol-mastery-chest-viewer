@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types'
-import { TableHead, TableRow, TableCell, TableCellProps, Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
+import { TableHead, TableRow, TableCell, TableSortLabel } from '@mui/material'
 import { HeadCell, SortDirection, SortOrder } from '../../types'
 
 type EnhancedTableHeadProps = {
@@ -11,26 +9,8 @@ type EnhancedTableHeadProps = {
     onRequestSort: (property: SortOrder) => void
 }
 
-const useStyles = makeStyles({
-    tableHeadCell: {
-        fontWeight: 900,
-    },
-    visuallyHidden: {
-        border: 0,
-        clip: 'rect(0 0 0 0)',
-        height: 1,
-        margin: -1,
-        overflow: 'hidden',
-        padding: 0,
-        position: 'absolute',
-        top: 20,
-        width: 1,
-    },
-})
-
 export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
     const { headers, order, orderBy, onRequestSort } = props
-    const classes = useStyles()
 
     const createSortHandler = (property: SortOrder) => () => {
         onRequestSort(property)
@@ -42,7 +22,7 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
                 {headers.map((headCell) => {
                     if (headCell.id === 'avatar') {
                         return (
-                            <TableCell align={headCell.align} className={classes.tableHeadCell} key={headCell.id}>
+                            <TableCell align={headCell.align} key={headCell.id} sx={{ fontWeight: 900 }}>
                                 {headCell.label}
                             </TableCell>
                         )
@@ -50,9 +30,9 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
                         return (
                             <TableCell
                                 align={headCell.align}
-                                className={classes.tableHeadCell}
                                 key={headCell.id}
                                 sortDirection={orderBy === headCell.id ? order : false}
+                                sx={{ fontWeight: 900 }}
                             >
                                 <TableSortLabel
                                     active={orderBy === headCell.id}
@@ -60,11 +40,6 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
                                     onClick={createSortHandler(headCell.id)}
                                 >
                                     {headCell.label}
-                                    {orderBy === headCell.id ? (
-                                        <span className={classes.visuallyHidden}>
-                                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                        </span>
-                                    ) : null}
                                 </TableSortLabel>
                             </TableCell>
                         )

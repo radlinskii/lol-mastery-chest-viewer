@@ -1,8 +1,8 @@
-import { Paper, TableContainer, Table, TableRow, TableCell, TableBody, Avatar } from '@material-ui/core'
+import { Paper, TableContainer, Table, TableRow, TableCell, TableBody, Avatar } from '@mui/material'
 import { useState } from 'react'
 import EnhancedTableHead from '../EnhancedTableHead'
 import { D_DRAGON_CDN_URL, headCells } from '../../constants'
-import { Champion, HeadCell, SortDirection, SortOrder } from '../../types'
+import { Champion, SortDirection, SortOrder } from '../../types'
 
 type Props = {
     champions: Champion[]

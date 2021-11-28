@@ -1,47 +1,10 @@
 import { useCallback, useEffect, useState, useMemo, ChangeEvent, KeyboardEvent } from 'react'
 import { useRouter } from 'next/router'
-import {
-    TextField,
-    Button,
-    Box,
-    Avatar,
-    Card,
-    Divider,
-    Typography,
-    FormControlLabel,
-    Checkbox,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { TextField, Button, Box, Avatar, Card, Divider, Typography, FormControlLabel, Checkbox } from '@mui/material'
 import useSummoner from '../../hooks/useSummoner'
 import { D_DRAGON_CDN_URL, HIDE_ROTATION_PARAM, SUMMONER_SEARCH_PARAM } from '../../constants'
 import ChampionList from '../ChampionList'
 import { Champion } from '../../types'
-
-const useStyles = makeStyles({
-    button: {
-        marginLeft: '20px',
-    },
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-        margin: '20px 0',
-    },
-    container: {
-        padding: '30px 40px',
-        margin: '20px 0',
-    },
-    avatar: {
-        marginLeft: '10px',
-    },
-    championSearch: {
-        marginRight: '40px',
-    },
-    toolbar: {
-        marginBottom: '16px',
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-})
 
 function getSingleQueryParam(value: string | string[] | undefined) {
     const valueStr = Array.isArray(value) ? value[0] : value
@@ -50,7 +13,6 @@ function getSingleQueryParam(value: string | string[] | undefined) {
 }
 
 function HomePage() {
-    const classes = useStyles()
     const router = useRouter()
     const initialSummonerName = getSingleQueryParam(router.query[SUMMONER_SEARCH_PARAM]) ?? ''
     const initialShouldHideRotation = getSingleQueryParam(router.query[HIDE_ROTATION_PARAM])
@@ -113,8 +75,8 @@ function HomePage() {
         championQuery ? list.filter(({ name }) => name.toLowerCase().indexOf(championQuery.toLowerCase()) > -1) : list
 
     return (
-        <Card className={classes.container} raised>
-            <Box mb={2} pb={2} pt={2}>
+        <Card raised sx={{ padding: '30px 40px', margin: '20px 0' }}>
+            <Box mb={2} pb={2} pt={2} sx={{ display: 'flex', alignItems: 'center' }}>
                 <TextField
                     disabled={loading}
                     onChange={handleSummonerNameInputChange}
@@ -125,10 +87,10 @@ function HomePage() {
                     value={value}
                 />
                 <Button
-                    className={classes.button}
                     color="primary"
                     disabled={loading || isSummonerNameEmpty}
                     onClick={handleSubmitButtonClick}
+                    sx={{ marginLeft: '20px' }}
                     variant="contained"
                 >
                     Submit
@@ -137,7 +99,7 @@ function HomePage() {
             {summoner === null && !loading && error?.message !== undefined && (
                 <>
                     <Divider />
-                    <Box className={classes.header}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
                         <Typography color="error" component="h2" variant="h3">
                             {error.message}
                         </Typography>
@@ -148,7 +110,7 @@ function HomePage() {
             {summoner === null && loading && error?.message === undefined && (
                 <>
                     <Divider />
-                    <Box className={classes.header}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
                         <Typography component="h2" variant="h3">
                             Loading...
                         </Typography>
@@ -159,21 +121,21 @@ function HomePage() {
             {summoner !== null && !loading && error?.message === undefined && (
                 <>
                     <Divider />
-                    <Box className={classes.header}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
                         <Typography component="h2" variant="h3">
                             Hi {summoner.name}!
                         </Typography>
                         <Avatar
                             alt={`${summoner.name} avatar`}
-                            className={classes.avatar}
                             src={`${D_DRAGON_CDN_URL}/${summoner.patchVersion}/img/profileicon/${summoner.profileIconId}.png`}
+                            sx={{ marginLeft: '10px' }}
                         />
                     </Box>
-                    <Box className={classes.toolbar}>
+                    <Box sx={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
                         <TextField
-                            className={classes.championSearch}
                             onChange={(e) => setChampionQuery(e.target.value)}
                             placeholder="Find champion"
+                            sx={{ marginRight: '40px' }}
                             type="search"
                         />
                         <FormControlLabel

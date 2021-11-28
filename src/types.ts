@@ -1,4 +1,9 @@
-import { TableCellProps } from '@material-ui/core'
+import { TableCellProps } from '@mui/material'
+
+import type { EmotionCache } from '@emotion/cache'
+import type { AppProps } from 'next/app'
+
+export type EnhancedAppProps = AppProps & { emotionCache: EmotionCache }
 
 export type RiotChampion = {
     key: string
