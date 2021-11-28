@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { D_DRAGON_CDN_URL, D_DRAGON_VERSIONS_URL } from '../constants'
-import { Champion, Summoner } from '../types'
+import { RiotChampion, Summoner, ApiSummonerResponse } from '../types'
 
-function mergeChampionsData(championsMap: Record<Champion['key'], Champion>, summonerChampions: Champion[]) {
+function mergeChampionsData(
+    championsMap: Record<RiotChampion['key'], RiotChampion>,
+    summonerChampions: ApiSummonerResponse['champions']
+) {
     return summonerChampions.map((champ) => ({
         ...champ,
         ...championsMap[champ.championId],
@@ -28,9 +31,10 @@ async function fetchChampionsJSON(patchVersion: string) {
     if (response.ok) {
         const json = await response.json()
 
-        const champions: Champion[] = Object.values(json.data) // TODO: what's in data? Object.values and then reduce?
+        const champions: RiotChampion[] = Object.values(json.data)
+
         return champions.reduce(
-            (acc: Record<Champion['key'], Champion>, champ: Champion) => ({
+            (acc: Record<RiotChampion['key'], RiotChampion>, champ) => ({
                 ...acc,
                 [champ.key]: champ,
             }),
@@ -42,20 +46,21 @@ async function fetchChampionsJSON(patchVersion: string) {
 }
 
 async function fetchMasteryChest(summonerName: string) {
-    const response = await fetch('/form', {
+    const response = await fetch('/api/form', {
         method: 'POST',
         body: JSON.stringify(summonerName),
     })
 
     if (response.ok) {
         const patchVersion = await fetchPatchVersion()
-        const [summonerData, championsMap] = await Promise.all([response.json(), fetchChampionsJSON(patchVersion)])
+        const [summonerData, championsMap]: [ApiSummonerResponse, Record<RiotChampion['key'], RiotChampion>] =
+            await Promise.all([response.json(), fetchChampionsJSON(patchVersion)])
 
         return {
-            name: summonerData.name as string,
-            profileIconId: summonerData.profileIconId as string,
+            name: summonerData.name,
+            profileIconId: summonerData.profileIconId,
             champions: mergeChampionsData(championsMap, summonerData.champions),
-            freeChampionIds: summonerData.freeChampionIds as string[],
+            freeChampionIds: summonerData.freeChampionIds,
             patchVersion,
         }
     } else if (response.status === 404) {

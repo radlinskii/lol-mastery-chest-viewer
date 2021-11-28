@@ -1,24 +1,38 @@
 import { TableCellProps } from '@material-ui/core'
 
-export type Champion = {
+export type RiotChampion = {
     key: string
-    championId: string
     id: string
-
     name: string
+}
+
+type RiotSummonerChampion = {
     chestGranted: boolean
     championLevel: number
     championPoints: number
-    avatar: string
+    championId: number
 }
+
+export type RiotSummonerChampionsResponse = RiotSummonerChampion[]
+
+export type Champion = RiotSummonerChampion & RiotChampion
 
 export type Summoner = {
     name: string
     profileIconId: string
     champions: Champion[]
-    freeChampionIds: string[]
+    freeChampionIds: number[]
     patchVersion: string
 }
+
+export type RiotSummonerResponse = Omit<Summoner, 'patchVersion' | 'champions'> & {
+    id: string
+    champions: RiotSummonerChampionsResponse
+}
+
+export type ApiSummonerResponse = Omit<RiotSummonerResponse, 'id'>
+
+export type RiotFreeChampionsRotationResponse = { freeChampionIds: number[] }
 
 export type HeadCell = {
     id: 'avatar' | 'name' | 'chestGranted' | 'championLevel' | 'championPoints'

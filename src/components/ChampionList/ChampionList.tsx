@@ -60,14 +60,14 @@ export default function ChampionList(props: Props) {
                 <TableBody>
                     {stableSort(champions, getComparator(order, orderBy)).map((champion) => {
                         return (
-                            <TableRow key={champion.id}>
+                            <TableRow key={champion.name}>
                                 <TableCell align="left">
                                     <Avatar
-                                        alt={`${champion.id} avatar`}
+                                        alt={`${champion.name} avatar`}
                                         src={`${D_DRAGON_CDN_URL}/${patchVersion}/img/champion/${champion.id}.png`}
                                     />
                                 </TableCell>
-                                <TableCell align="left">{champion.id}</TableCell>
+                                <TableCell align="left">{champion.name}</TableCell>
                                 <TableCell align="center">{champion.chestGranted ? 'false' : 'true'}</TableCell>
                                 <TableCell align="center">{champion.championLevel}</TableCell>
                                 <TableCell align="center">{champion.championPoints}</TableCell>
